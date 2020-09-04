@@ -5,15 +5,21 @@ VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CasinoGames.Api", "CasinoGames.Api\CasinoGames.Api.csproj", "{E35725B6-E5EF-4519-95F8-681BB7C623E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CasinoGames.Api.Tests", "CasinoGames.Api.Tests\CasinoGames.Api.Tests.csproj", "{FC1BE08A-6959-4B92-8A20-13716F7601B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CasinoGames.Api.Tests", "CasinoGames.Api.Tests\CasinoGames.Api.Tests.csproj", "{FC1BE08A-6959-4B92-8A20-13716F7601B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CasinoGames", "CasinoGames\CasinoGames.csproj", "{E4031150-9285-494E-9FA5-F23F9C126BA4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CasinoGames", "CasinoGames\CasinoGames.csproj", "{E4031150-9285-494E-9FA5-F23F9C126BA4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CasinoGames.Tests", "CasinoGames.Tests\CasinoGames.Tests.csproj", "{E6245982-1541-47F6-AF14-D43305305459}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CasinoGames.Tests", "CasinoGames.Tests\CasinoGames.Tests.csproj", "{E6245982-1541-47F6-AF14-D43305305459}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoundRobin", "RoundRobin\RoundRobin.csproj", "{057A0C81-F20C-4943-AA68-A6CBF9D81101}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoundRobin", "RoundRobin\RoundRobin.csproj", "{057A0C81-F20C-4943-AA68-A6CBF9D81101}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoundRobin.DependencyFactory", "RoundRobin.DependencyFactory\RoundRobin.DependencyFactory.csproj", "{BDE1D58B-788D-424D-A98B-C9F500C75658}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RoundRobin.DependencyFactory", "RoundRobin.DependencyFactory\RoundRobin.DependencyFactory.csproj", "{BDE1D58B-788D-424D-A98B-C9F500C75658}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CasinoGames.Api.Data", "CasinoGames.Api.Data\CasinoGames.Api.Data.csproj", "{6595C058-CDA9-4099-82CE-55738F57FA76}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CasinoGames.Shared.Models", "CasinoGames.Shared.Models\CasinoGames.Shared.Models.csproj", "{3453811A-9FCD-44E2-98CC-BC2DC8E4708C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CasinoGames.Api.Logic", "CasinoGames.Api.Logic\CasinoGames.Api.Logic.csproj", "{E3069099-EC30-4979-A2DC-E1322A9BB290}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +51,18 @@ Global
 		{BDE1D58B-788D-424D-A98B-C9F500C75658}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDE1D58B-788D-424D-A98B-C9F500C75658}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDE1D58B-788D-424D-A98B-C9F500C75658}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6595C058-CDA9-4099-82CE-55738F57FA76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6595C058-CDA9-4099-82CE-55738F57FA76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6595C058-CDA9-4099-82CE-55738F57FA76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6595C058-CDA9-4099-82CE-55738F57FA76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3453811A-9FCD-44E2-98CC-BC2DC8E4708C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3453811A-9FCD-44E2-98CC-BC2DC8E4708C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3453811A-9FCD-44E2-98CC-BC2DC8E4708C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3453811A-9FCD-44E2-98CC-BC2DC8E4708C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3069099-EC30-4979-A2DC-E1322A9BB290}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3069099-EC30-4979-A2DC-E1322A9BB290}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3069099-EC30-4979-A2DC-E1322A9BB290}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3069099-EC30-4979-A2DC-E1322A9BB290}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,7 +1,10 @@
+using CasinoGames.Api.Data;
+using CasinoGames.Api.Logic;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -34,6 +37,10 @@ namespace CasinoGames.Api
             services
                 .AddControllers()
                 .AddFluentValidation();
+
+            services.AddDbContext<GameContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CasinoUser")));
+
+            services.AddRoundRobin<IJackpotProvider, JackpotProviderA, JackpotProviderB>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

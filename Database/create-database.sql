@@ -72,3 +72,13 @@ GRANT INSERT ON [dbo].[Statistics] TO [user]
 GO
 GRANT SELECT ON [dbo].[Statistics] TO [user]
 GO
+
+INSERT INTO [dbo].[Games] (name, thumbnail, image, url)
+VALUES ('Game 1', 'https://picsum.photos/200', 'https://picsum.photos/800/400', 'https://localhost:5001/api/game/play/1'),
+('Game 2', 'https://picsum.photos/200', 'https://picsum.photos/800/400', 'https://localhost:5001/api/game/play/2'),
+('Game 3', 'https://picsum.photos/200', 'https://picsum.photos/800/400', 'https://localhost:5001/api/game/play/3'),
+('Game 4', 'https://picsum.photos/200', 'https://picsum.photos/800/400', 'https://localhost:5001/api/game/play/4'),
+('Game 5', 'https://picsum.photos/200', 'https://picsum.photos/800/400', 'https://localhost:5001/api/game/play/5'),
+('Game 6', 'https://picsum.photos/200', 'https://picsum.photos/800/400', 'https://localhost:5001/api/game/play/6'),
+('Game 7', 'https://picsum.photos/200', 'https://picsum.photos/800/400', 'https://localhost:5001/api/game/play/7'),
+('Game 8', 'https://picsum.photos/200', 'https://picsum.photos/800/400', 'https://localhost:5001/api/game/play/8')
