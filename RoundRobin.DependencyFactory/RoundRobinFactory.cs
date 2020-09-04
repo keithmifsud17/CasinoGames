@@ -1,18 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace RoundRobin.DependencyFactory
 {
     internal class RoundRobinFactory<TService> where TService : class
     {
-        private readonly RoundRobinList<Func<TService>> services;
+        private readonly RoundRobinTracker<TService> tracker;
+        private readonly IEnumerable<IRoundRobinService<TService>> services;
 
-        public RoundRobinFactory(IEnumerable<IRoundRobinImplementation<TService>> services)
+        public RoundRobinFactory(RoundRobinTracker<TService> tracker, IEnumerable<IRoundRobinService<TService>> services)
         {
-            this.services = new RoundRobinList<Func<TService>>(services.Select(s => s.Service));
+            this.tracker = tracker;
+            this.services = services;
         }
 
-        public TService Resolve() => services.Next().Invoke();
+        public TService NextService()
+        {
+            var type = tracker.NextType();
+            return services.Single(service => service.ImplementationType == type).Service;
+        }
     }
 }

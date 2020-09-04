@@ -35,7 +35,11 @@ namespace CasinoGames.Api.Tests
         public void TestRoundRobinServiceCollection_Does_Rotate_Transiently()
         {
             var services = new ServiceCollection();
-            services.AddRoundRobin<IService, ConcreteServiceA, ConcreteServiceB>();
+            services
+                .AddRoundRobin<IService>(ServiceLifetime.Singleton, ServiceLifetime.Transient)
+                .AddImplementation<ConcreteServiceA>()
+                .AddImplementation<ConcreteServiceB>();
+
             var provider = services.BuildServiceProvider();
 
             using var scope = provider.CreateScope();
@@ -56,7 +60,10 @@ namespace CasinoGames.Api.Tests
         public void TestRoundRobinServiceCollection_Does_Rotate_Across_Scopes()
         {
             var services = new ServiceCollection();
-            services.AddRoundRobin<IService, ConcreteServiceA, ConcreteServiceB>();
+            services.AddRoundRobin<IService>(ServiceLifetime.Scoped, ServiceLifetime.Transient)
+                .AddImplementation<ConcreteServiceA>()
+                .AddImplementation<ConcreteServiceB>();
+
             var provider = services.BuildServiceProvider();
 
             using (var scope = provider.CreateScope())
@@ -72,10 +79,59 @@ namespace CasinoGames.Api.Tests
         }
 
         [Fact]
+        public void TestRoundRobinServiceCollection_RoundRobinServiceLifetime_Transient()
+        {
+            var services = new ServiceCollection();
+            services.AddRoundRobin<IService>(ServiceLifetime.Transient, ServiceLifetime.Transient)
+                .AddImplementation<ConcreteServiceA>()
+                .AddImplementation<ConcreteServiceB>();
+
+            var provider = services.BuildServiceProvider();
+
+            using var scope = provider.CreateScope();
+            scope.ServiceProvider.GetRequiredService<IService>().Should().BeOfType(typeof(ConcreteServiceA));
+            scope.ServiceProvider.GetRequiredService<IService>().Should().BeOfType(typeof(ConcreteServiceB));
+        }
+
+        [Fact]
+        public void TestRoundRobinServiceCollection_RoundRobinServiceLifetime_Scoped()
+        {
+            var services = new ServiceCollection();
+            services.AddRoundRobin<IService>(ServiceLifetime.Transient, ServiceLifetime.Scoped)
+                .AddImplementation<ConcreteServiceA>()
+                .AddImplementation<ConcreteServiceB>();
+
+            var provider = services.BuildServiceProvider();
+
+            using (var scope = provider.CreateScope())
+            {
+                scope.ServiceProvider.GetRequiredService<IService>().Should().BeOfType(typeof(ConcreteServiceA));
+                scope.ServiceProvider.GetRequiredService<IService>().Should().BeOfType(typeof(ConcreteServiceA));
+            }
+            using (var scope = provider.CreateScope())
+            {
+                scope.ServiceProvider.GetRequiredService<IService>().Should().BeOfType(typeof(ConcreteServiceB));
+                scope.ServiceProvider.GetRequiredService<IService>().Should().BeOfType(typeof(ConcreteServiceB));
+            }
+        }
+
+        [Fact]
+        public void TestRoundRobinServiceCollection_RoundRobinServiceLifetime_Singleton_ThrowException()
+        {
+            var services = new ServiceCollection();
+            Action act = () => services.AddRoundRobin<IService>(ServiceLifetime.Transient, ServiceLifetime.Singleton);
+
+            act.Should().Throw<InvalidOperationException>("singleton lifetime is not allowed");
+        }
+
+        [Fact]
         public void TestRoundRobinServiceCollection_Service_Injected_After_Dispose()
         {
             var services = new ServiceCollection();
-            services.AddRoundRobin<IService, ConcreteServiceA, ConcreteServiceB>();
+            services.AddRoundRobin<IService>(ServiceLifetime.Transient, ServiceLifetime.Transient)
+                .AddImplementation<ConcreteServiceA>()
+                .AddImplementation<ConcreteServiceB>();
+
             var provider = services.BuildServiceProvider();
 
             using (var scope = provider.CreateScope())
