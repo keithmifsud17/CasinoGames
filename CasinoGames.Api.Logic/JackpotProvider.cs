@@ -3,6 +3,7 @@ using CasinoGames.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CasinoGames.Api.Logic
@@ -15,9 +16,36 @@ namespace CasinoGames.Api.Logic
         {
             this.context = context;
         }
-        public async Task<IEnumerable<Game>> ListGames()
+
+        public async Task AddStatistic(Game game, string sessionId, CancellationToken cancellationToken = default)
         {
-            return await context.Games.ToListAsync();
+            if (game is null)
+            {
+                throw new ArgumentNullException(nameof(game));
+            }
+
+            if (sessionId is null)
+            {
+                throw new ArgumentNullException(nameof(sessionId));
+            }
+
+            if (!(await context.Games.ContainsAsync(game)))
+            {
+                throw new InvalidOperationException("Provided game does not exist", new ArgumentException(nameof(game)));
+            }
+
+            await context.Statistics.AddAsync(new Statistic { Game = game, SessionId = sessionId, DateTime = DateTime.UtcNow }, cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task<Game> GetGame(int id, CancellationToken cancellationToken = default)
+        {
+            return await context.Games.FirstOrDefaultAsync(game => id.Equals(game.GameId), cancellationToken);
+        }
+
+        public async Task<IEnumerable<Game>> GetGames(CancellationToken cancellationToken = default)
+        {
+            return await context.Games.ToListAsync(cancellationToken);
         }
     }
 

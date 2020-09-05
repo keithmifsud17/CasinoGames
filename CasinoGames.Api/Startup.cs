@@ -40,7 +40,10 @@ namespace CasinoGames.Api
 
             services.AddDbContext<GameContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CasinoUser")));
 
-            services.AddRoundRobin<IJackpotProvider, JackpotProviderA, JackpotProviderB>();
+            services
+                .AddRoundRobin<IJackpotProvider>(ServiceLifetime.Scoped, ServiceLifetime.Transient)
+                .AddImplementation<JackpotProviderA>()
+                .AddImplementation<JackpotProviderB>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

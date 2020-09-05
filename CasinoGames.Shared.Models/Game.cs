@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace CasinoGames.Shared.Models
+﻿namespace CasinoGames.Shared.Models
 {
     public class Game
     {
@@ -9,7 +7,5 @@ namespace CasinoGames.Shared.Models
         public string Thumbnail { get; set; }
         public string Image { get; set; }
         public string Url { get; set; }
-
-        public IEnumerable<Statistic> Statistics { get; set; }
     }
 }
