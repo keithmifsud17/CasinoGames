@@ -13,7 +13,7 @@ namespace CasinoGames.Api.Data
         {
             var games = modelBuilder.Entity<Game>().ToTable("Games");
 
-            games.Property(x => x.Url).HasComputedColumnSql("CONCAT('https://localhost:5001/api/game/play/',[gameId]");
+            games.Property(x => x.Url).HasComputedColumnSql("CONCAT('http://localhost:5000/api/game/play/',[gameId]");
             games.Ignore(x => x.TotalPlays);
 
             base.OnModelCreating(modelBuilder);

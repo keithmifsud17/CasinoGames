@@ -9,13 +9,12 @@ using System.Threading.Tasks;
 
 namespace CasinoGames.Website.HttpClients
 {
-    public class CookieHandler : HttpClientHandler
+    public class CookieHandler : DelegatingHandler
     {
         private readonly IHttpContextAccessor httpContextAccessor;
 
         public CookieHandler(IHttpContextAccessor httpContextAccessor)
         {
-            UseCookies = false;
             this.httpContextAccessor = httpContextAccessor;
         }
 
@@ -51,8 +50,7 @@ namespace CasinoGames.Website.HttpClients
                     var options = new CookieOptions
                     {
                         HttpOnly = cookie.HttpOnly,
-                        Path = cookie.Path,
-                        Secure = cookie.Secure
+                        Path = cookie.Path
                     };
 
                     if (!DateTime.MinValue.Equals(cookie.Expires))

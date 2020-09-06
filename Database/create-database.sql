@@ -26,7 +26,7 @@ CREATE TABLE [dbo].[Games](
 	[name] [varchar](80) NOT NULL,
 	[thumbnail] [varchar](2000) NOT NULL,
 	[image] [varchar](2000) NOT NULL,
-	[url] AS (concat('https://localhost:5001/api/game/play/',[gameId])),
+	[url] AS (concat('http://localhost:5000/api/game/play/',[gameId])),
 	[dateCreated] [datetime] NOT NULL,
 	[enabled] [bit] NOT NULL
  CONSTRAINT [PK_Games] PRIMARY KEY CLUSTERED 
@@ -137,3 +137,5 @@ GRANT UPDATE ON [dbo].[GamesView] TO [admin]
 GO
 GRANT SELECT ON [dbo].[GamesView] TO [user]
 GO
+
+PRINT 'DATABASE READY'
