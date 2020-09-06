@@ -12,5 +12,7 @@ namespace CasinoGames.Api.Logic
         Task<Game> GetGame(int id, CancellationToken cancellationToken = default);
 
         Task AddStatistic(Game game, string sessionId, CancellationToken cancellationToken = default);
+
+        Task<IEnumerable<Jackpot>> GetJackpots(CancellationToken cancellationToken = default);
     }
 }

@@ -30,5 +30,11 @@ namespace CasinoGames.Api.Controllers
             }
             return NotFound();
         }
+
+        [HttpGet("jackpots")]
+        public async Task<IEnumerable<Jackpot>> Jackpots([FromServices] IJackpotProvider provider, CancellationToken cancellationToken)
+        {
+            return await provider.GetJackpots(cancellationToken);
+        }
     }
 }

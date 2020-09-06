@@ -42,6 +42,33 @@ namespace CasinoGames.Website.Tests
 
             result.Should().BeEquivalentTo(list);
         }
+        [Fact]
+        public async Task TestGetJackpot_Returns_Serialized_List()
+        {
+            var list = new[] { new Jackpot { Game = new Game { GameId = 1, Image = "Image", Name = "Name", Thumbnail = "Thumbnail", Url = "Url" }, Value = 2 } };
+
+            var mockHttpMessageHandler = new Mock<HttpMessageHandler>();
+
+            mockHttpMessageHandler
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Content = new StringContent(JsonSerializer.Serialize(list)),
+                });
+
+            var mockClient = new HttpClient(mockHttpMessageHandler.Object)
+            {
+                BaseAddress = new System.Uri("https://www.google.com") // Sorry google
+            };
+
+            var gameHttpClient = new GameHttpClient(mockClient);
+
+            var result = await gameHttpClient.ListJackpotsAsync();
+
+            result.Should().BeEquivalentTo(list);
+        }
 
         [Fact]
         public void TestGetGames_NotFound_Throws_Exception()
