@@ -1,0 +1,9 @@
+﻿@model CasinoGames.Shared.Models.Game
+
+<div class="card col-3" style="padding:0.5rem">
+    <img class="card-img-top" src="@Model.Thumbnail" alt="@Model.Name">
+    <div class="card-body">
+        <h5 class="card-title">@Model.Name</h5>
+        <a href="@Model.Url" class="btn btn-primary">Play</a>
+    </div>
+</div>

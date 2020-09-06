@@ -6,9 +6,11 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation.AspNetCore" Version="9.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.7" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CasinoGames.Api.Logic\CasinoGames.Api.Logic.csproj" />
     <ProjectReference Include="..\RoundRobin.DependencyFactory\RoundRobin.DependencyFactory.csproj" />
   </ItemGroup>
 

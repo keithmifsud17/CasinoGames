@@ -1,3 +1,4 @@
+using CasinoGames.Api.HttpClients;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +20,11 @@ namespace CasinoGames
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            services.AddHttpClient<IGameHttpClient, GameHttpClient>(client =>
+            {
+                client.BaseAddress = new System.Uri(Configuration.GetValue<string>("Api"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
