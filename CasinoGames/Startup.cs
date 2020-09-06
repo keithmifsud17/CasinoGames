@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Net.Http;
 
 namespace CasinoGames
 {
@@ -23,20 +24,23 @@ namespace CasinoGames
 
             services.AddHttpContextAccessor();
 
-            services.AddSingleton<CookieHandler>();
+            services.AddTransient<CookieHandler>();
 
             services
                 .AddHttpClient<IGameHttpClient, GameHttpClient>(client =>
                 {
                     client.BaseAddress = new System.Uri(Configuration.GetValue<string>("Api"));
-                }).ConfigurePrimaryHttpMessageHandler<CookieHandler>();
+                })
+                .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { UseCookies = false })
+                .AddHttpMessageHandler<CookieHandler>();
 
             services
                 .AddHttpClient<IAuthHttpClient, AuthHttpClient>(client =>
                 {
                     client.BaseAddress = new System.Uri(Configuration.GetValue<string>("Api"));
                 })
-                .ConfigurePrimaryHttpMessageHandler<CookieHandler>();
+                .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { UseCookies = false })
+                .AddHttpMessageHandler<CookieHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,10 +53,7 @@ namespace CasinoGames
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
             }
-            app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();

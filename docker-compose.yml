@@ -1,0 +1,35 @@
+version: "3.8"
+services:
+
+    database:
+        ports:
+            - "1433:1433"
+        build:
+            context: ./database
+            dockerfile: Dockerfile
+        container_name: database
+        expose:
+            - "1433"
+
+    api:
+        ports:
+            - "5000:5000"
+        depends_on: 
+            - database
+        build:
+            context: .
+            dockerfile: CasinoGamesApi.Dockerfile
+        container_name: api
+        expose:
+            - "5000"
+
+    website:
+        ports:
+            - "5001:5001"
+        depends_on: 
+            - api
+        build:
+            context: .
+            dockerfile: CasinoGames.Dockerfile
+        container_name: website
+

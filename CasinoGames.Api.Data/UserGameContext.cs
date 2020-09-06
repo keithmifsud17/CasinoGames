@@ -11,7 +11,7 @@ namespace CasinoGames.Api.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Game>().ToView("GamesView").Property(x => x.Url).HasComputedColumnSql("CONCAT('https://localhost:5001/api/game/play/',[gameId]");
+            modelBuilder.Entity<Game>().ToView("GamesView").Property(x => x.Url).HasComputedColumnSql("CONCAT('http://localhost:5000/api/game/play/',[gameId]");
             base.OnModelCreating(modelBuilder);
         }
     }
