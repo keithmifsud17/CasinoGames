@@ -7,12 +7,12 @@ namespace CasinoGames.Api.Logic
 {
     public interface IJackpotProvider
     {
-        Task<IEnumerable<Game>> GetGames(CancellationToken cancellationToken = default);
+        Task<IEnumerable<Game>> GetGamesAsync(CancellationToken cancellationToken = default);
 
-        Task<Game> GetGame(int id, CancellationToken cancellationToken = default);
+        Task<Game> GetGameAsync(int id, CancellationToken cancellationToken = default);
 
-        Task AddStatistic(Game game, string sessionId, CancellationToken cancellationToken = default);
+        Task AddStatisticAsync(Game game, string sessionId, CancellationToken cancellationToken = default);
 
-        Task<IEnumerable<Jackpot>> GetJackpots(CancellationToken cancellationToken = default);
+        Task<IEnumerable<Jackpot>> GetJackpotsAsync(CancellationToken cancellationToken = default);
     }
 }

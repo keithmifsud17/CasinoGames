@@ -3,6 +3,7 @@ using CasinoGames.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,7 +20,7 @@ namespace CasinoGames.Api.Logic
             this.adminContext = adminContext;
         }
 
-        public async Task<Game> AddGame(string name, string image, string thumbnail, CancellationToken cancellationToken = default)
+        public async Task<Game> AddGameAsync(string name, string image, string thumbnail, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -40,6 +41,7 @@ namespace CasinoGames.Api.Logic
                 Image = image,
                 Thumbnail = thumbnail,
                 DateCreated = DateTime.UtcNow,
+                Enabled = true
             });
 
             await adminContext.SaveChangesAsync(cancellationToken);
@@ -48,7 +50,7 @@ namespace CasinoGames.Api.Logic
             return newGameEntity.Entity;
         }
 
-        public async Task AddStatistic(Game game, string sessionId, CancellationToken cancellationToken = default)
+        public async Task AddStatisticAsync(Game game, string sessionId, CancellationToken cancellationToken = default)
         {
             if (game is null)
             {
@@ -69,19 +71,30 @@ namespace CasinoGames.Api.Logic
             await context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<Game> GetGame(int id, CancellationToken cancellationToken = default)
+        public async Task DeleteGameAsync(int id, CancellationToken cancellationToken = default)
         {
-            return await context.Games.FirstOrDefaultAsync(game => id.Equals(game.GameId), cancellationToken);
+            var game = await adminContext.Games.SingleOrDefaultAsync(g => g.GameId.Equals(id), cancellationToken);
+            if (game != default)
+            {
+                game.Enabled = false;
+                adminContext.Games.Update(game);
+                await adminContext.SaveChangesAsync(cancellationToken);
+            }
         }
 
-        public async Task<IEnumerable<Game>> GetGames(CancellationToken cancellationToken = default)
+        public async Task<Game> GetGameAsync(int id, CancellationToken cancellationToken = default)
         {
-            return await context.Games.ToListAsync(cancellationToken);
+            return await context.Games.FirstOrDefaultAsync(game => id.Equals(game.GameId) && game.Enabled, cancellationToken);
         }
 
-        public async Task<IEnumerable<Jackpot>> GetJackpots(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Game>> GetGamesAsync(CancellationToken cancellationToken = default)
         {
-            return await context.Jackpots.Include(a => a.Game).ToListAsync(cancellationToken);
+            return await context.Games.Where(g => g.Enabled).ToListAsync(cancellationToken);
+        }
+
+        public async Task<IEnumerable<Jackpot>> GetJackpotsAsync(CancellationToken cancellationToken = default)
+        {
+            return await context.Jackpots.Include(a => a.Game).Where(j => j.Game.Enabled).ToListAsync(cancellationToken);
         }
     }
 

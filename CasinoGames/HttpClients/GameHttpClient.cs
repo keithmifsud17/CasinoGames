@@ -17,9 +17,11 @@ namespace CasinoGames.Website.HttpClients
             this.client = client;
         }
 
-        public Task<IEnumerable<Game>> ListGamesAsync() => SimpleListAsync<Game>("api/game");
+        public Task<IEnumerable<Game>> ListGamesAsync() => GetAsync<IEnumerable<Game>>("api/game");
 
-        public Task<IEnumerable<Jackpot>> ListJackpotsAsync() => SimpleListAsync<Jackpot>("api/game/jackpots");
+        public Task<Game> GetGameAsync(int id) => GetAsync<Game>($"api/game/{id}");
+
+        public Task<IEnumerable<Jackpot>> ListJackpotsAsync() => GetAsync<IEnumerable<Jackpot>>("api/game/jackpots");
 
         public async Task<Game> AddGameAsync(GameViewModel game)
         {
@@ -40,7 +42,14 @@ namespace CasinoGames.Website.HttpClients
                 });
         }
 
-        private async Task<IEnumerable<T>> SimpleListAsync<T>(string url)
+        public async Task DeleteGameAsync(int id)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Delete, $"api/game/{id}");
+            var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+        }
+
+        private async Task<T> GetAsync<T>(string url)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, url);
 
@@ -48,19 +57,23 @@ namespace CasinoGames.Website.HttpClients
             response.EnsureSuccessStatusCode();
 
             using var responseStream = await response.Content.ReadAsStreamAsync();
-            return await JsonSerializer.DeserializeAsync<IEnumerable<T>>(
-                responseStream, 
+            return await JsonSerializer.DeserializeAsync<T>(
+                responseStream,
                 new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 });
         }
-
     }
 
     public interface IGameHttpClient
     {
         Task<Game> AddGameAsync(GameViewModel game);
+
+        Task DeleteGameAsync(int id);
+
+        Task<Game> GetGameAsync(int id);
+
         Task<IEnumerable<Game>> ListGamesAsync();
 
         Task<IEnumerable<Jackpot>> ListJackpotsAsync();

@@ -8,6 +8,5 @@ namespace CasinoGames.Shared.Models
         public string SessionId { get; set; }
         public DateTime DateTime { get; set; }
         public Game Game { get; set; }
-
     }
 }

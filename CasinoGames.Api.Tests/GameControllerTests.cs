@@ -24,10 +24,10 @@ namespace CasinoGames.Api.Tests
             var list = new[] { new Game { GameId = 1, Image = "Image", Name = "Name", Thumbnail = "Thumbnail", Url = "Url" } };
 
             var mockProvider = new Mock<IJackpotProvider>();
-            mockProvider.Setup(provider => provider.GetGames(It.IsAny<CancellationToken>())).ReturnsAsync(list);
+            mockProvider.Setup(provider => provider.GetGamesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(list);
             mockProvider.Verify();
 
-            var result = await controller.Index(mockProvider.Object, CancellationToken.None);
+            var result = await controller.GetGamesAsync(mockProvider.Object, CancellationToken.None);
             result.Should().BeEquivalentTo(list);
         }
 
@@ -39,10 +39,10 @@ namespace CasinoGames.Api.Tests
             var list = new[] { new Jackpot { Game = new Game { GameId = 1, Image = "Image", Name = "Name", Thumbnail = "Thumbnail", Url = "Url" }, JackpotId = 1, Value = 1 } };
 
             var mockProvider = new Mock<IJackpotProvider>();
-            mockProvider.Setup(provider => provider.GetJackpots(It.IsAny<CancellationToken>())).ReturnsAsync(list);
+            mockProvider.Setup(provider => provider.GetJackpotsAsync(It.IsAny<CancellationToken>())).ReturnsAsync(list);
             mockProvider.Verify();
 
-            var result = await controller.Jackpots(mockProvider.Object, CancellationToken.None);
+            var result = await controller.GetJackpotsAsync(mockProvider.Object, CancellationToken.None);
             result.Should().BeEquivalentTo(list);
         }
 
@@ -53,15 +53,15 @@ namespace CasinoGames.Api.Tests
             var mockProvider = new Mock<IJackpotProvider>();
 
             mockProvider
-                .Setup(provider => provider.GetGame(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+                .Setup(provider => provider.GetGameAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((int gameId, CancellationToken token) => new Game { GameId = gameId, Image = "Image", Name = "Name", Thumbnail = "Thumbnail", Url = "Url" });
 
             mockProvider
-                .Setup(provider => provider.AddStatistic(It.IsAny<Game>(), It.IsAny<string>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+                .Setup(provider => provider.AddStatisticAsync(It.IsAny<Game>(), It.IsAny<string>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
             mockProvider.Verify();
 
-            var result = await controller.PlayGame(mockProvider.Object, 1, CancellationToken.None);
+            var result = await controller.PlayGameAsync(mockProvider.Object, 1, CancellationToken.None);
             var okResult = result.Should().BeOfType<OkObjectResult>();
 
             okResult.Which.StatusCode.Should().Be(200);
@@ -75,15 +75,15 @@ namespace CasinoGames.Api.Tests
             var mockProvider = new Mock<IJackpotProvider>();
 
             mockProvider
-                .Setup(provider => provider.GetGame(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+                .Setup(provider => provider.GetGameAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(value: null);
 
             mockProvider
-                .Setup(provider => provider.AddStatistic(It.IsAny<Game>(), It.IsAny<string>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+                .Setup(provider => provider.AddStatisticAsync(It.IsAny<Game>(), It.IsAny<string>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
             mockProvider.Verify();
 
-            var result = await controller.PlayGame(mockProvider.Object, 1, CancellationToken.None);
+            var result = await controller.PlayGameAsync(mockProvider.Object, 1, CancellationToken.None);
             result.Should().BeOfType<NotFoundResult>();
         }
 
@@ -94,22 +94,22 @@ namespace CasinoGames.Api.Tests
             var mockAdminProvider = new Mock<IAdminJackpotProvider>();
 
             mockAdminProvider
-                .Setup(provider => provider.AddGame(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .Setup(provider => provider.AddGameAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((string name, string image, string thumbnail, CancellationToken token) => new Game
-                    {
-                        DateCreated = DateTime.UtcNow,
-                        GameId = 1,
-                        Image = image,
-                        Name = name,
-                        Thumbnail = thumbnail,
-                        TotalPlays = 0,
-                        Url = default
-                    });
+                {
+                    DateCreated = DateTime.UtcNow,
+                    GameId = 1,
+                    Image = image,
+                    Name = name,
+                    Thumbnail = thumbnail,
+                    TotalPlays = 0,
+                    Url = default
+                });
 
             mockAdminProvider.Verify();
 
             var mockGame = new Models.GameApiModel { Name = "name", Image = "image", Thumbnail = "thumbnail" };
-            var result = await controller.AddGame(mockAdminProvider.Object, mockGame, CancellationToken.None);
+            var result = await controller.AddGameAsync(mockAdminProvider.Object, mockGame, CancellationToken.None);
 
             result.Name.Should().Be(mockGame.Name);
             result.Image.Should().Be(mockGame.Image);

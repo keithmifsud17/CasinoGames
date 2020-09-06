@@ -13,7 +13,7 @@ namespace CasinoGames.Website.HttpClients
             this.client = client;
         }
 
-        public async Task<bool> Login()
+        public async Task<bool> LoginAsync()
         {
             var request = new HttpRequestMessage(HttpMethod.Post, "api/admin/login");
 
@@ -22,7 +22,7 @@ namespace CasinoGames.Website.HttpClients
             return true;
         }
 
-        public async Task<string> Info()
+        public async Task<string> InfoAsync()
         {
             var request = new HttpRequestMessage(HttpMethod.Get, "api/admin");
 
@@ -38,7 +38,8 @@ namespace CasinoGames.Website.HttpClients
 
     public interface IAuthHttpClient
     {
-        Task<bool> Login();
-        Task<string> Info();
+        Task<bool> LoginAsync();
+
+        Task<string> InfoAsync();
     }
 }

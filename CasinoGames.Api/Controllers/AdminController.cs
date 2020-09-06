@@ -28,8 +28,8 @@ namespace CasinoGames.Api.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
 
-        [HttpGet()]
-        public string Info()
+        [HttpGet]
+        public string InfoAsync()
         {
             return HttpContext.User.Identity.Name;
         }
