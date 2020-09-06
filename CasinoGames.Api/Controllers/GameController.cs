@@ -15,15 +15,15 @@ namespace CasinoGames.Api.Controllers
     public class GameController : ControllerBase
     {
         [HttpGet]
-        public async Task<IEnumerable<Game>> Index([FromServices] IJackpotProvider provider, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Game>> GetGamesAsync([FromServices] IJackpotProvider provider, CancellationToken cancellationToken)
         {
-            return await provider.GetGames(cancellationToken);
+            return await provider.GetGamesAsync(cancellationToken);
         }
 
         [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetGame([FromServices] IJackpotProvider provider, [FromRoute(Name = "id")] int gameId, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetGameAsync([FromServices] IJackpotProvider provider, [FromRoute(Name = "id")] int gameId, CancellationToken cancellationToken)
         {
-            var game = await provider.GetGame(gameId, cancellationToken);
+            var game = await provider.GetGameAsync(gameId, cancellationToken);
             if (game != default)
             {
                 return Ok(game);
@@ -32,34 +32,34 @@ namespace CasinoGames.Api.Controllers
         }
 
         [HttpGet("play/{id:int}")]
-        public async Task<IActionResult> PlayGame([FromServices] IJackpotProvider provider, [FromRoute] int id, CancellationToken cancellationToken)
+        public async Task<IActionResult> PlayGameAsync([FromServices] IJackpotProvider provider, [FromRoute] int id, CancellationToken cancellationToken)
         {
-            var game = await provider.GetGame(id, cancellationToken);
+            var game = await provider.GetGameAsync(id, cancellationToken);
             if (game != default)
             {
                 // sessionId should be something from a header
-                await provider.AddStatistic(game, Guid.NewGuid().ToString(), cancellationToken);
+                await provider.AddStatisticAsync(game, Guid.NewGuid().ToString(), cancellationToken);
                 return Ok($"Now playing {game.Name}");
             }
             return NotFound();
         }
 
         [HttpGet("jackpots")]
-        public async Task<IEnumerable<Jackpot>> Jackpots([FromServices] IJackpotProvider provider, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Jackpot>> GetJackpotsAsync([FromServices] IJackpotProvider provider, CancellationToken cancellationToken)
         {
-            return await provider.GetJackpots(cancellationToken);
+            return await provider.GetJackpotsAsync(cancellationToken);
         }
 
         [HttpPost, Authorize]
-        public async Task<Game> AddGame([FromServices] IAdminJackpotProvider provider, [FromBody] GameApiModel game, CancellationToken cancellationToken)
+        public async Task<Game> AddGameAsync([FromServices] IAdminJackpotProvider provider, [FromBody] GameApiModel game, CancellationToken cancellationToken)
         {
-            return await provider.AddGame(game.Name, game.Image, game.Thumbnail, cancellationToken);
+            return await provider.AddGameAsync(game.Name, game.Image, game.Thumbnail, cancellationToken);
         }
 
         [HttpDelete("{id:int}"), Authorize]
-        public async Task Delete([FromServices] IAdminJackpotProvider provider, [FromRoute(Name = "id")] int gameId, CancellationToken cancellationToken)
+        public async Task DeleteAsync([FromServices] IAdminJackpotProvider provider, [FromRoute(Name = "id")] int gameId, CancellationToken cancellationToken)
         {
-            await provider.DeleteGame(gameId, cancellationToken);
+            await provider.DeleteGameAsync(gameId, cancellationToken);
         }
     }
 }

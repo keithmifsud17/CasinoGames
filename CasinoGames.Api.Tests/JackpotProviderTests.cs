@@ -65,7 +65,7 @@ namespace CasinoGames.Api.Tests
         {
             using var context = new UserGameContext(options);
             var provider = new JackpotProviderA(context, null);
-            var result = await provider.GetGames(CancellationToken.None);
+            var result = await provider.GetGamesAsync(CancellationToken.None);
 
             result.Should()
                 .HaveCount(10)
@@ -77,7 +77,7 @@ namespace CasinoGames.Api.Tests
         {
             using var context = new UserGameContext(options);
             var provider = new JackpotProviderA(context, null);
-            var result = await provider.GetJackpots(CancellationToken.None);
+            var result = await provider.GetJackpotsAsync(CancellationToken.None);
 
             result.Should()
                 .HaveCount(10)
@@ -94,7 +94,7 @@ namespace CasinoGames.Api.Tests
         {
             using var context = new UserGameContext(options);
             var provider = new JackpotProviderA(context, null);
-            var game = await provider.GetGame(2);
+            var game = await provider.GetGameAsync(2);
             TestGame(game, 2);
         }
 
@@ -103,7 +103,7 @@ namespace CasinoGames.Api.Tests
         {
             using var context = new UserGameContext(options);
             var provider = new JackpotProviderA(context, null);
-            var game = await provider.GetGame(50);
+            var game = await provider.GetGameAsync(50);
             game.Should().BeNull();
         }
 
@@ -113,8 +113,8 @@ namespace CasinoGames.Api.Tests
             using var context = new UserGameContext(options);
             var provider = new JackpotProviderA(context, null);
 
-            var game = await provider.GetGame(1);
-            await provider.AddStatistic(game, "testSession");
+            var game = await provider.GetGameAsync(1);
+            await provider.AddStatisticAsync(game, "testSession");
 
             var statistic = await context.Statistics.FirstAsync();
 
@@ -129,7 +129,7 @@ namespace CasinoGames.Api.Tests
             using var context = new UserGameContext(options);
             var provider = new JackpotProviderA(context, null);
 
-            Func<Task> act = async () => await provider.AddStatistic(null, "testSession");
+            Func<Task> act = async () => await provider.AddStatisticAsync(null, "testSession");
             act.Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("game");
         }
 
@@ -139,7 +139,7 @@ namespace CasinoGames.Api.Tests
             using var context = new UserGameContext(options);
             var provider = new JackpotProviderA(context, null);
 
-            Func<Task> act = async () => await provider.AddStatistic(new Game(), null);
+            Func<Task> act = async () => await provider.AddStatisticAsync(new Game(), null);
             act.Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("sessionId");
         }
 
@@ -149,7 +149,7 @@ namespace CasinoGames.Api.Tests
             using var context = new UserGameContext(options);
             var provider = new JackpotProviderA(context, null);
 
-            Func<Task> act = async () => await provider.AddStatistic(new Game(), "sessionId");
+            Func<Task> act = async () => await provider.AddStatisticAsync(new Game(), "sessionId");
             act.Should().Throw<InvalidOperationException>().WithInnerException<ArgumentException>();
         }
 
@@ -160,7 +160,7 @@ namespace CasinoGames.Api.Tests
             using var adminContext = new AdminGameContext(adminOptions);
             var provider = new JackpotProviderA(context, adminContext);
 
-            var game = await provider.AddGame("GameName", "GameImage", "GameThumbnail");
+            var game = await provider.AddGameAsync("GameName", "GameImage", "GameThumbnail");
 
             game.GameId.Should().BeGreaterThan(0);
             game.Name.Should().Be($"GameName");
@@ -176,7 +176,7 @@ namespace CasinoGames.Api.Tests
             using var adminContext = new AdminGameContext(adminOptions);
             var provider = new JackpotProviderA(context, adminContext);
 
-            Func<Task> act = async () => await provider.AddGame(null, "GameImage", "GameThumbnail");
+            Func<Task> act = async () => await provider.AddGameAsync(null, "GameImage", "GameThumbnail");
             act.Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("name");
         }
 
@@ -187,7 +187,7 @@ namespace CasinoGames.Api.Tests
             using var adminContext = new AdminGameContext(adminOptions);
             var provider = new JackpotProviderA(context, adminContext);
 
-            Func<Task> act = async () => await provider.AddGame("GameName", null, "GameThumbnail");
+            Func<Task> act = async () => await provider.AddGameAsync("GameName", null, "GameThumbnail");
             act.Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("image");
         }
 
@@ -198,8 +198,25 @@ namespace CasinoGames.Api.Tests
             using var adminContext = new AdminGameContext(adminOptions);
             var provider = new JackpotProviderA(context, adminContext);
 
-            Func<Task> act = async () => await provider.AddGame("GameName", "GameImage", null);
+            Func<Task> act = async () => await provider.AddGameAsync("GameName", "GameImage", null);
             act.Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("thumbnail");
+        }
+
+        [Fact]
+        public async Task TestAdminJackpotProvider_DeleteGame_CannotFetchIt()
+        {
+            using var context = new UserGameContext(options);
+            using var adminContext = new AdminGameContext(adminOptions);
+            var provider = new JackpotProviderA(context, adminContext);
+
+            var game = (await provider.GetGamesAsync()).First();
+            game.Enabled.Should().BeTrue();
+
+            await provider.DeleteGameAsync(game.GameId);
+
+            //raw value
+            var deletedGame = await adminContext.Games.FirstAsync(g => g.GameId.Equals(game.GameId));
+            deletedGame.Enabled.Should().BeFalse();
         }
 
         private void TestGame(Game game, int i)

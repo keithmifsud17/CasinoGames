@@ -6,10 +6,10 @@ namespace CasinoGames.Website.Controllers
 {
     public class AdminController : Controller
     {
-        [HttpPost]
-        public async Task<IActionResult> Login([FromServices] IAuthHttpClient authClient)
+        [HttpPost, ActionName("Login")]
+        public async Task<IActionResult> LoginAsync([FromServices] IAuthHttpClient authClient)
         {
-            await authClient.Login();
+            await authClient.LoginAsync();
             return RedirectToAction(nameof(GameController.Index), "management");
         }
     }

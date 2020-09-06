@@ -42,6 +42,33 @@ namespace CasinoGames.Website.Tests
 
             result.Should().BeEquivalentTo(list);
         }
+        [Fact]
+        public async Task TestGetGame_Returns_Serialized_List()
+        {
+            var game = new Game{ GameId = 1, Image = "Image", Name = "Name", Thumbnail = "Thumbnail", Url = "Url" } ;
+
+            var mockHttpMessageHandler = new Mock<HttpMessageHandler>();
+
+            mockHttpMessageHandler
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Content = new StringContent(JsonSerializer.Serialize(game)),
+                });
+
+            var mockClient = new HttpClient(mockHttpMessageHandler.Object)
+            {
+                BaseAddress = new System.Uri("https://www.google.com") // Sorry google
+            };
+
+            var gameHttpClient = new GameHttpClient(mockClient);
+
+            var result = await gameHttpClient.GetGameAsync(1);
+
+            result.Should().BeEquivalentTo(game);
+        }
 
         [Fact]
         public async Task TestGetJackpot_Returns_Serialized_List()

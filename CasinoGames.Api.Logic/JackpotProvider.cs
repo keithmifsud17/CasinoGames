@@ -20,7 +20,7 @@ namespace CasinoGames.Api.Logic
             this.adminContext = adminContext;
         }
 
-        public async Task<Game> AddGame(string name, string image, string thumbnail, CancellationToken cancellationToken = default)
+        public async Task<Game> AddGameAsync(string name, string image, string thumbnail, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -50,7 +50,7 @@ namespace CasinoGames.Api.Logic
             return newGameEntity.Entity;
         }
 
-        public async Task AddStatistic(Game game, string sessionId, CancellationToken cancellationToken = default)
+        public async Task AddStatisticAsync(Game game, string sessionId, CancellationToken cancellationToken = default)
         {
             if (game is null)
             {
@@ -71,7 +71,7 @@ namespace CasinoGames.Api.Logic
             await context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task DeleteGame(int id, CancellationToken cancellationToken = default)
+        public async Task DeleteGameAsync(int id, CancellationToken cancellationToken = default)
         {
             var game = await adminContext.Games.SingleOrDefaultAsync(g => g.GameId.Equals(id), cancellationToken);
             if (game != default)
@@ -82,17 +82,17 @@ namespace CasinoGames.Api.Logic
             }
         }
 
-        public async Task<Game> GetGame(int id, CancellationToken cancellationToken = default)
+        public async Task<Game> GetGameAsync(int id, CancellationToken cancellationToken = default)
         {
             return await context.Games.FirstOrDefaultAsync(game => id.Equals(game.GameId) && game.Enabled, cancellationToken);
         }
 
-        public async Task<IEnumerable<Game>> GetGames(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Game>> GetGamesAsync(CancellationToken cancellationToken = default)
         {
             return await context.Games.Where(g => g.Enabled).ToListAsync(cancellationToken);
         }
 
-        public async Task<IEnumerable<Jackpot>> GetJackpots(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Jackpot>> GetJackpotsAsync(CancellationToken cancellationToken = default)
         {
             return await context.Jackpots.Include(a => a.Game).Where(j => j.Game.Enabled).ToListAsync(cancellationToken);
         }

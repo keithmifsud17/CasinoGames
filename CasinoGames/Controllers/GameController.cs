@@ -11,7 +11,7 @@ namespace CasinoGames.Website.Controllers
     {
         public async Task<IActionResult> Index([FromServices] IAuthHttpClient authClient, [FromServices] IGameHttpClient gameClient)
         {
-            var user = await authClient.Info();
+            var user = await authClient.InfoAsync();
             if (string.IsNullOrEmpty(user))
             {
                 return View("Login");
