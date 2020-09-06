@@ -6,8 +6,10 @@ namespace CasinoGames.Website.Models
     {
         [Required]
         public string Name { get; set; }
+
         [Required, Url]
         public string Image { get; set; }
+
         [Required, Url]
         public string Thumbnail { get; set; }
     }

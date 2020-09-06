@@ -42,6 +42,7 @@ namespace CasinoGames.Website.Tests
 
             result.Should().BeEquivalentTo(list);
         }
+
         [Fact]
         public async Task TestGetJackpot_Returns_Serialized_List()
         {

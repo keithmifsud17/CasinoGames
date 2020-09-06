@@ -1,5 +1,4 @@
-﻿using CasinoGames.Shared.Models;
-using CasinoGames.Website.HttpClients;
+﻿using CasinoGames.Website.HttpClients;
 using CasinoGames.Website.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

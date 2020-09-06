@@ -96,15 +96,15 @@ namespace CasinoGames.Api.Tests
             mockAdminProvider
                 .Setup(provider => provider.AddGame(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((string name, string image, string thumbnail, CancellationToken token) => new Game
-                    {
-                        DateCreated = DateTime.UtcNow,
-                        GameId = 1,
-                        Image = image,
-                        Name = name,
-                        Thumbnail = thumbnail,
-                        TotalPlays = 0,
-                        Url = default
-                    });
+                {
+                    DateCreated = DateTime.UtcNow,
+                    GameId = 1,
+                    Image = image,
+                    Name = name,
+                    Thumbnail = thumbnail,
+                    TotalPlays = 0,
+                    Url = default
+                });
 
             mockAdminProvider.Verify();
 

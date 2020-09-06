@@ -39,6 +39,7 @@ namespace CasinoGames.Website.HttpClients
     public interface IAuthHttpClient
     {
         Task<bool> Login();
+
         Task<string> Info();
     }
 }

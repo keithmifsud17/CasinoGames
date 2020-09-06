@@ -31,7 +31,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddSingleton(_ => new RoundRobinTracker<TService>(builder.ImplementationTypes));
 
-            services.Add(ServiceDescriptor.Describe(typeof(TService), provider => 
+            services.Add(ServiceDescriptor.Describe(typeof(TService), provider =>
             {
                 var service = provider.GetRequiredService<RoundRobinFactory<TService>>().NextService();
 

@@ -71,7 +71,9 @@ namespace CasinoGames.Website.HttpClients
         Task<Game> AddGameAsync(GameViewModel game);
 
         Task DeleteGameAsync(int id);
+
         Task<Game> GetGameAsync(int id);
+
         Task<IEnumerable<Game>> ListGamesAsync();
 
         Task<IEnumerable<Jackpot>> ListJackpotsAsync();

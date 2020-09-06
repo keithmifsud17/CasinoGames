@@ -17,6 +17,7 @@ namespace CasinoGames.Api.Tests
     {
         private readonly DbContextOptions<UserGameContext> options;
         private readonly DbContextOptions<AdminGameContext> adminOptions;
+
         public JackpotProviderTests()
         {
             var InMemoryDatabaseRoot = new InMemoryDatabaseRoot();
@@ -80,11 +81,11 @@ namespace CasinoGames.Api.Tests
 
             result.Should()
                 .HaveCount(10)
-                .And.SatisfyRespectively(Enumerable.Range(1, 10).Select<int, Action<Jackpot>>(i => jackpot => 
+                .And.SatisfyRespectively(Enumerable.Range(1, 10).Select<int, Action<Jackpot>>(i => jackpot =>
                 {
                     jackpot.Value.Should().Be(i * 100);
 
-                    TestGame(jackpot.Game, i); 
+                    TestGame(jackpot.Game, i);
                 }));
         }
 
