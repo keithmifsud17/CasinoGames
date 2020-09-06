@@ -20,6 +20,17 @@ namespace CasinoGames.Api.Controllers
             return await provider.GetGames(cancellationToken);
         }
 
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetGame([FromServices] IJackpotProvider provider, [FromRoute(Name = "id")] int gameId, CancellationToken cancellationToken)
+        {
+            var game = await provider.GetGame(gameId, cancellationToken);
+            if (game != default)
+            {
+                return Ok(game);
+            }
+            return NotFound();
+        }
+
         [HttpGet("play/{id:int}")]
         public async Task<IActionResult> PlayGame([FromServices] IJackpotProvider provider, [FromRoute] int id, CancellationToken cancellationToken)
         {
@@ -43,6 +54,12 @@ namespace CasinoGames.Api.Controllers
         public async Task<Game> AddGame([FromServices] IAdminJackpotProvider provider, [FromBody] GameApiModel game, CancellationToken cancellationToken)
         {
             return await provider.AddGame(game.Name, game.Image, game.Thumbnail, cancellationToken);
+        }
+
+        [HttpDelete("{id:int}"), Authorize]
+        public async Task Delete([FromServices] IAdminJackpotProvider provider, [FromRoute(Name = "id")] int gameId, CancellationToken cancellationToken)
+        {
+            await provider.DeleteGame(gameId, cancellationToken);
         }
     }
 }

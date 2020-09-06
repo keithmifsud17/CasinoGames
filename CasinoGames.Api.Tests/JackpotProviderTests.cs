@@ -45,7 +45,8 @@ namespace CasinoGames.Api.Tests
                         Image = $"Game{i}Image",
                         Thumbnail = $"Game{i}Thumbnail",
                         Url = $"Game{i}Url",
-                        DateCreated = DateTime.UtcNow
+                        DateCreated = DateTime.UtcNow,
+                        Enabled = true
                     });
 
                     context.Jackpots.Add(new Jackpot

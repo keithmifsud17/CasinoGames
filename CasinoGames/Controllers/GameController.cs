@@ -1,5 +1,7 @@
-﻿using CasinoGames.Website.HttpClients;
+﻿using CasinoGames.Shared.Models;
+using CasinoGames.Website.HttpClients;
 using CasinoGames.Website.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -35,6 +37,27 @@ namespace CasinoGames.Website.Controllers
             catch
             {
                 return View();
+            }
+        }
+
+        public async Task<IActionResult> Delete([FromServices] IGameHttpClient gameClient, int id)
+        {
+            var game = await gameClient.GetGameAsync(id);
+            return View(game);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete([FromServices] IGameHttpClient gameClient, int id, IFormCollection collection)
+        {
+            try
+            {
+                await gameClient.DeleteGameAsync(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View(nameof(Delete));
             }
         }
     }

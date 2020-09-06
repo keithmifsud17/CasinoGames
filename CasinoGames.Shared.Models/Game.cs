@@ -11,5 +11,6 @@ namespace CasinoGames.Shared.Models
         public string Url { get; set; }
         public int TotalPlays { get; set; }
         public DateTime DateCreated { get; set; }
+        public bool Enabled { get; set; }
     }
 }

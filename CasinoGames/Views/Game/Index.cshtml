@@ -16,6 +16,7 @@
             <th>Featured Image</th>
             <th>Thumbnail</th>
             <th>Total Plays</th>
+            <th>&nbsp;</th>
         </tr>
     </thead>
     @foreach (var game in Model)
@@ -27,6 +28,9 @@
             <td><img src="@(game.Image)" style="width:200px" /></td>
             <td><img src="@(game.Thumbnail)" style="width:100px" /></td>
             <td>@(game.TotalPlays)</td>
+            <td>
+                <a asp-action="Delete" asp-route-id="@(game.GameId)">Delete Game</a>
+            </td>
         </tr>
     }
 </table>
