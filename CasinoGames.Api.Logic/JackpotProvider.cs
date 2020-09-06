@@ -1,7 +1,6 @@
 ﻿using CasinoGames.Api.Data;
 using CasinoGames.Shared.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -9,13 +8,44 @@ using System.Threading.Tasks;
 
 namespace CasinoGames.Api.Logic
 {
-    public abstract class JackpotProvider : IJackpotProvider
+    public abstract class JackpotProvider : IJackpotProvider, IAdminJackpotProvider
     {
-        private readonly GameContext context;
+        private readonly UserGameContext context;
+        private readonly AdminGameContext adminContext;
 
-        public JackpotProvider(GameContext context)
+        public JackpotProvider(UserGameContext context, AdminGameContext adminContext)
         {
             this.context = context;
+            this.adminContext = adminContext;
+        }
+
+        public async Task<Game> AddGame(string name, string image, string thumbnail, CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            if (string.IsNullOrEmpty(thumbnail))
+            {
+                throw new ArgumentNullException(nameof(thumbnail));
+            }
+            if (string.IsNullOrEmpty(image))
+            {
+                throw new ArgumentNullException(nameof(image));
+            }
+
+            var newGameEntity = adminContext.Games.Attach(new Game
+            {
+                Name = name,
+                Image = image,
+                Thumbnail = thumbnail,
+                DateCreated = DateTime.UtcNow,
+            });
+
+            await adminContext.SaveChangesAsync(cancellationToken);
+            await newGameEntity.ReloadAsync();
+
+            return newGameEntity.Entity;
         }
 
         public async Task AddStatistic(Game game, string sessionId, CancellationToken cancellationToken = default)
@@ -57,14 +87,14 @@ namespace CasinoGames.Api.Logic
 
     public class JackpotProviderA : JackpotProvider
     {
-        public JackpotProviderA(GameContext context) : base(context)
+        public JackpotProviderA(UserGameContext context, AdminGameContext adminContext) : base(context, adminContext)
         {
         }
     }
 
     public class JackpotProviderB : JackpotProvider
     {
-        public JackpotProviderB(GameContext context) : base(context)
+        public JackpotProviderB(UserGameContext context, AdminGameContext adminContext) : base(context, adminContext)
         {
         }
     }

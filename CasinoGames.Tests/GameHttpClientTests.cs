@@ -1,5 +1,5 @@
-﻿using CasinoGames.Api.HttpClients;
-using CasinoGames.Shared.Models;
+﻿using CasinoGames.Shared.Models;
+using CasinoGames.Website.HttpClients;
 using FluentAssertions;
 using Moq;
 using Moq.Protected;
@@ -93,6 +93,36 @@ namespace CasinoGames.Website.Tests
             Func<Task> act = async () => await gameHttpClient.ListGamesAsync();
 
             act.Should().Throw<HttpRequestException>();
+        }
+
+        [Fact]
+        public async Task TestAddGames_Success()
+        {
+            var game = new Models.GameViewModel { Image = "Image", Thumbnail = "Thumbnail", Name = "Name" };
+
+            var mockHttpMessageHandler = new Mock<HttpMessageHandler>();
+
+            mockHttpMessageHandler
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Content = new StringContent(JsonSerializer.Serialize(new Game { GameId = 1, Image = game.Image, Name = game.Name, Thumbnail = game.Thumbnail }))
+                });
+
+            var mockClient = new HttpClient(mockHttpMessageHandler.Object)
+            {
+                BaseAddress = new System.Uri("https://www.google.com") // Sorry google
+            };
+
+            var gameHttpClient = new GameHttpClient(mockClient);
+
+            var result = await gameHttpClient.AddGameAsync(game);
+
+            result.Name.Should().Be(game.Name);
+            result.Image.Should().Be(game.Image);
+            result.Thumbnail.Should().Be(game.Thumbnail);
         }
     }
 }

@@ -6,7 +6,7 @@
 <div class="row text-center">
     @if (Model.LatestGame != default)
     {
-        <div class="col-md-7" style="padding:0.5rem;">
+        <div class="col-md-6 col-lg-7" style="padding:0.5rem;">
             <h2><small class="text-muted">Try our latest game.</small> @(Model.LatestGame.Name)</h2>
             <a href="@(Model.LatestGame.Url)" title="@(Model.LatestGame.Name)">
                 <img src="@(Model.LatestGame.Image)" alt="@(Model.LatestGame.Name)" class="w-100" />
@@ -15,13 +15,13 @@
     }
     @if ((Model.TopJackpots?.Any()).GetValueOrDefault())
     {
-        <div class="col-md-5" style="padding:0.5rem;">
+        <div class="col-md-6 col-lg-5" style="padding:0.5rem;">
             <h2>Total Jackpot @(Model.TotalJackpot.ToString("C"))</h2>
             <h3>Top 3 Jackpots</h3>
             <div class="row">
                 @foreach (var jackpot in Model.TopJackpots)
                 {
-                    <div class="col">
+                    <div class="col-4">
                         <partial name="_JackpotTile" model="jackpot" />
                     </div>
                 }
@@ -36,7 +36,7 @@
             <div class="row">
                 @foreach (var game in Model.TopGames)
                 {
-                    <div class="col">
+                    <div class="col-sm-4 col-md-2">
                         <partial name="_GameTile" model="game" />
                     </div>
                 }
