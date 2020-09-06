@@ -1,9 +1,11 @@
-using CasinoGames.Api.HttpClients;
+using CasinoGames.Website.HttpClients;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Net.Http;
 
 namespace CasinoGames
 {
@@ -21,10 +23,22 @@ namespace CasinoGames
         {
             services.AddControllersWithViews();
 
-            services.AddHttpClient<IGameHttpClient, GameHttpClient>(client =>
-            {
-                client.BaseAddress = new System.Uri(Configuration.GetValue<string>("Api"));
-            });
+            services.AddHttpContextAccessor();
+
+            services.AddSingleton<CookieHandler>();
+
+            services
+                .AddHttpClient<IGameHttpClient, GameHttpClient>(client =>
+                {
+                    client.BaseAddress = new System.Uri(Configuration.GetValue<string>("Api"));
+                }).ConfigurePrimaryHttpMessageHandler<CookieHandler>();
+
+            services
+                .AddHttpClient<IAuthHttpClient, AuthHttpClient>(client =>
+                {
+                    client.BaseAddress = new System.Uri(Configuration.GetValue<string>("Api"));
+                })
+                .ConfigurePrimaryHttpMessageHandler<CookieHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

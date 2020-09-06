@@ -1,5 +1,7 @@
 ﻿using CasinoGames.Api.Logic;
+using CasinoGames.Api.Models;
 using CasinoGames.Shared.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -35,6 +37,12 @@ namespace CasinoGames.Api.Controllers
         public async Task<IEnumerable<Jackpot>> Jackpots([FromServices] IJackpotProvider provider, CancellationToken cancellationToken)
         {
             return await provider.GetJackpots(cancellationToken);
+        }
+
+        [HttpPost, Authorize]
+        public async Task<Game> AddGame([FromServices] IAdminJackpotProvider provider, [FromBody] GameApiModel game, CancellationToken cancellationToken)
+        {
+            return await provider.AddGame(game.Name, game.Image, game.Thumbnail, cancellationToken);
         }
     }
 }

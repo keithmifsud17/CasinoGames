@@ -1,13 +1,12 @@
-﻿using CasinoGames.Api.HttpClients;
-using CasinoGames.Models;
+﻿using CasinoGames.Models;
 using CasinoGames.Shared.Models;
+using CasinoGames.Website.HttpClients;
 using CasinoGames.Website.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Security.Policy;
 using System.Threading.Tasks;
 
 namespace CasinoGames.Controllers

@@ -1,0 +1,32 @@
+﻿@model IEnumerable<CasinoGames.Shared.Models.Game>
+@{
+    ViewData["Title"] = "Admin Panel";
+}
+
+<h2>Games</h2>
+
+<a asp-action="Create">Create Game</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Date Added</th>
+            <th>Game</th>
+            <th>Url</th>
+            <th>Featured Image</th>
+            <th>Thumbnail</th>
+            <th>Total Plays</th>
+        </tr>
+    </thead>
+    @foreach (var game in Model)
+    {
+        <tr>
+            <td>@(game.DateCreated.ToShortDateString())</td>
+            <td>@(game.Name)</td>
+            <td><a href="@(game.Url)">@(game.Url)</a></td>
+            <td><img src="@(game.Image)" style="width:200px" /></td>
+            <td><img src="@(game.Thumbnail)" style="width:100px" /></td>
+            <td>@(game.TotalPlays)</td>
+        </tr>
+    }
+</table>

@@ -1,4 +1,5 @@
-﻿using RoundRobin.DependencyFactory;
+﻿using Microsoft.Extensions.Logging;
+using RoundRobin.DependencyFactory;
 using System;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -30,7 +31,18 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddSingleton(_ => new RoundRobinTracker<TService>(builder.ImplementationTypes));
 
-            services.Add(ServiceDescriptor.Describe(typeof(TService), provider => provider.GetRequiredService<RoundRobinFactory<TService>>().NextService(), roundRobinLifetime));
+            services.Add(ServiceDescriptor.Describe(typeof(TService), provider => 
+            {
+                var service = provider.GetRequiredService<RoundRobinFactory<TService>>().NextService();
+
+                var logger = provider.GetService<ILogger<TService>>();
+                if (logger != default)
+                {
+                    logger.LogTrace("Resolving {service} with implementation {implementation}", typeof(TService), service.GetType());
+                }
+
+                return service;
+            }, roundRobinLifetime));
 
             return builder;
         }
