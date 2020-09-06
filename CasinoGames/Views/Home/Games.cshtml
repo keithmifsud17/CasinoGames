@@ -1,0 +1,16 @@
+﻿@model IEnumerable<CasinoGames.Shared.Models.Game>
+@{
+    ViewData["Title"] = "Games";
+}
+
+<div class="text-center">
+    <h2>Games</h2>
+    <div class="row">
+        @foreach (var game in Model)
+        {
+            <div class="col-sm-6 col-md-4 col-lg-3" style="padding:0.5rem">
+                <partial name="_GameTile" model="game" />
+            </div>
+        }
+    </div>
+</div>

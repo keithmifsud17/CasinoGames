@@ -1,0 +1,10 @@
+﻿@model CasinoGames.Shared.Models.Jackpot
+
+<div class="card">
+    <a class="card-img-top" href="@(Model.Game.Url)" title="@(Model.Game.Name)">
+        <img class="w-100" src="@(Model.Game.Thumbnail)" alt="@(Model.Game.Name)" />
+    </a>
+    <div class="card-body">
+        <p class="card-text">@(Model.Value.ToString("C"))</p>
+    </div>
+</div>

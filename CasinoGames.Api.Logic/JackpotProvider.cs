@@ -1,6 +1,7 @@
 ﻿using CasinoGames.Api.Data;
 using CasinoGames.Shared.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -46,6 +47,11 @@ namespace CasinoGames.Api.Logic
         public async Task<IEnumerable<Game>> GetGames(CancellationToken cancellationToken = default)
         {
             return await context.Games.ToListAsync(cancellationToken);
+        }
+
+        public async Task<IEnumerable<Jackpot>> GetJackpots(CancellationToken cancellationToken = default)
+        {
+            return await context.Jackpots.Include(a => a.Game).ToListAsync(cancellationToken);
         }
     }
 

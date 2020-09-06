@@ -1,0 +1,14 @@
+﻿@model CasinoGames.Shared.Models.Game
+
+<div class="card">
+    <a class="card-img-top" href="@(Model.Url)" title="@(Model.Name)">
+        <img class="w-100" src="@(Model.Thumbnail)" alt="@(Model.Name)" />
+    </a>
+    <div class="card-body">
+        <p class="card-text">
+            <a class="" href="@(Model.Url)" title="@(Model.Name)">
+                @(Model.Name)
+            </a>
+        </p>
+    </div>
+</div>

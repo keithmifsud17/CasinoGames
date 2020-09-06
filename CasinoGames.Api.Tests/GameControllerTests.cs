@@ -13,7 +13,7 @@ namespace CasinoGames.Api.Tests
     public class GameControllerTests
     {
         [Fact]
-        public async Task TestIndex_Returns_Products()
+        public async Task TestIndex_Returns_Games()
         {
             var controller = new GameController();
 
@@ -24,6 +24,21 @@ namespace CasinoGames.Api.Tests
             mockProvider.Verify();
 
             var result = await controller.Index(mockProvider.Object, CancellationToken.None);
+            result.Should().BeEquivalentTo(list);
+        }
+
+        [Fact]
+        public async Task TestJackpots_Returns_Jackpots()
+        {
+            var controller = new GameController();
+
+            var list = new[] { new Jackpot { Game = new Game { GameId = 1, Image = "Image", Name = "Name", Thumbnail = "Thumbnail", Url = "Url" }, JackpotId = 1, Value = 1 } };
+
+            var mockProvider = new Mock<IJackpotProvider>();
+            mockProvider.Setup(provider => provider.GetJackpots(It.IsAny<CancellationToken>())).ReturnsAsync(list);
+            mockProvider.Verify();
+
+            var result = await controller.Jackpots(mockProvider.Object, CancellationToken.None);
             result.Should().BeEquivalentTo(list);
         }
 

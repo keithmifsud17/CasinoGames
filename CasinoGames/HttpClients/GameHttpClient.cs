@@ -15,25 +15,32 @@ namespace CasinoGames.Api.HttpClients
             this.client = client;
         }
 
-        public async Task<IEnumerable<Game>> ListGamesAsync()
+        public Task<IEnumerable<Game>> ListGamesAsync() => SimpleListAsync<Game>("api/game");
+
+        public Task<IEnumerable<Jackpot>> ListJackpotsAsync() => SimpleListAsync<Jackpot>("api/game/jackpots");
+
+        private async Task<IEnumerable<T>> SimpleListAsync<T>(string url)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, "api/game");
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
 
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
 
             using var responseStream = await response.Content.ReadAsStreamAsync();
-            return await JsonSerializer.DeserializeAsync<IEnumerable<Game>>(
+            return await JsonSerializer.DeserializeAsync<IEnumerable<T>>(
                 responseStream, 
                 new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 });
         }
+
     }
 
     public interface IGameHttpClient
     {
         Task<IEnumerable<Game>> ListGamesAsync();
+
+        Task<IEnumerable<Jackpot>> ListJackpotsAsync();
     }
 }

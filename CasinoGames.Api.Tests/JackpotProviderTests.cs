@@ -32,12 +32,19 @@ namespace CasinoGames.Api.Tests
             {
                 for (int i = 1; i <= 10; i++)
                 {
-                    context.Games.Add(new Shared.Models.Game
+                    var game = context.Games.Attach(new Shared.Models.Game
                     {
                         Name = $"Game{i}",
                         Image = $"Game{i}Image",
                         Thumbnail = $"Game{i}Thumbnail",
-                        Url = $"Game{i}Url"
+                        Url = $"Game{i}Url",
+                        DateCreated = DateTime.UtcNow
+                    });
+
+                    context.Jackpots.Add(new Jackpot
+                    {
+                        Game = game.Entity,
+                        Value = i * 100
                     });
                 }
                 context.SaveChanges();
@@ -54,6 +61,23 @@ namespace CasinoGames.Api.Tests
             result.Should()
                 .HaveCount(10)
                 .And.SatisfyRespectively(Enumerable.Range(1, 10).Select<int, Action<Game>>(i => game => TestGame(game, i)));
+        }
+
+        [Fact]
+        public async Task TestJackpotProvider_GetJackpots()
+        {
+            using var context = new GameContext(options);
+            var provider = new JackpotProviderA(context);
+            var result = await provider.GetJackpots(CancellationToken.None);
+
+            result.Should()
+                .HaveCount(10)
+                .And.SatisfyRespectively(Enumerable.Range(1, 10).Select<int, Action<Jackpot>>(i => jackpot => 
+                {
+                    jackpot.Value.Should().Be(i * 100);
+
+                    TestGame(jackpot.Game, i); 
+                }));
         }
 
         [Fact]
